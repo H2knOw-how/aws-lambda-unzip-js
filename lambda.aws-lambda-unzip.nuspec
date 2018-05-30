@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>AWSLambdaUnzip</id>
+    <version>$version$</version>
+    <authors>Mott MacDonald</authors>
+    <description>Lambda for unzipping files on S3</description>
+  </metadata>
+  <files>
+    <file src="aws-lambda-unzip.zip" target="" />
+  </files>
+</package>
