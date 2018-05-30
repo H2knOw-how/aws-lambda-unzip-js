@@ -1,14 +1,18 @@
 'use strict';
 
-let AWS = require('aws-sdk');
-let s3 = new AWS.S3({apiVersion: '2006-03-01'});
-let Rx =  require('rx');
-let AdmZip = require('adm-zip');
-let bucket = 'my-bucket';
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
+const Rx =  require('rx');
+const AdmZip = require('adm-zip');
+const path = require('path');
+
 
 exports.handler = (event, context, callback) => {
   let file_key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+  let bucket = event.Records[0].s3.bucket.name;
   let params = { Bucket: bucket, Key: file_key };
+  let base_path = path.dirname(file_key);
+  console.log('bucket: ' + bucket + ' key: ' + file_key)
   s3.getObject(params, (err, data) => {
     if (err) {
       callback(err, null);
@@ -21,9 +25,10 @@ exports.handler = (event, context, callback) => {
 
       source.subscribe(
         (zipEntry) => {
+          let destinationPath =  path.join(base_path, zipEntry.name);
           let params = {
             Bucket  : bucket,
-            Key     : zipEntry.name,
+            Key     : destinationPath,
             Body    : zipEntry.getCompressedData() // decompressed file as buffer
           };
           // upload decompressed file
