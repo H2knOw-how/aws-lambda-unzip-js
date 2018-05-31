@@ -11,7 +11,12 @@ exports.handler = (event, context, callback) => {
   let file_key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
   let bucket = event.Records[0].s3.bucket.name;
   let params = { Bucket: bucket, Key: file_key };
-  let base_path = path.dirname(file_key);
+  let basePath = path.dirname(file_key);
+  
+  if (!basePath.includes('backfill')) {
+    callback(null, 'file not applicable');
+  }
+
   console.log('bucket: ' + bucket + ' key: ' + file_key)
   s3.getObject(params, (err, data) => {
     if (err) {
@@ -25,7 +30,8 @@ exports.handler = (event, context, callback) => {
 
       source.subscribe(
         (zipEntry) => {
-          let destinationPath =  path.join(base_path, zipEntry.name);
+          let archivePath = basePath.replace('backfill', 'archive');
+          let destinationPath = path.join(archivePath, zipEntry.name);
           let params = {
             Bucket  : bucket,
             Key     : destinationPath,
