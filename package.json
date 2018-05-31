@@ -5,6 +5,7 @@
   "description": "Unzip files on S3",
   "main": "index.js",
   "scripts": {
+    "deploy": "node build/deploy.js",
     "test": "node test/test.js"
   },
   "engines": {
@@ -20,6 +21,7 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "aws-sdk": "^2.6.12",
+    "ncp": "^2.0.0",
     "path": "^0.12.7",
     "rx": "^4.1.0"
   }
