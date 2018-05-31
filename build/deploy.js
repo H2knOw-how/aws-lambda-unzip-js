@@ -16,12 +16,7 @@ ncp(source, dest, options, function (err) {
     console.log('node_modules copied');
 });
 
-source = path.join('.', 'index.js');
-dest = path.join('.', 'deploy');
+const sourcefile = path.join('.', 'index.js');
+const destfile = path.join('.', 'deploy', 'index.js');
 
-ncp(source, dest, options, function (err) {
-    if (err) {
-        return console.error(err);
-    }
-    console.log('index.js copied');
-});
+fs.copyFileSync(sourcefile, destfile);
