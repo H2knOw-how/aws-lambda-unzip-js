@@ -15,6 +15,7 @@ exports.handler = (event, context, callback) => {
 
   if (!basePath.includes('backfill')) {
     callback(null, 'file not applicable');
+    return;
   }
 
   console.log('bucket: ' + bucket + ' key: ' + file_key)
