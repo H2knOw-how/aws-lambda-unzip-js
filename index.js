@@ -6,6 +6,17 @@ const Rx = require('rx');
 const AdmZip = require('adm-zip');
 const path = require('path');
 
+const sanitizeName = (basePath, entryName) => {
+  const re = /[A-Za-z]+(\d+)(_\w+){0,1}\.(.*)/gi;
+  const parts = re.exec(entryName);
+  const outputPath = basePath.replace('backfill', path.join('low-priority-trace-sets', ''));
+  const subFolder = parts[2] && parts[2].includes('_archived') ? 'archive' : 'telemetered';
+  const suffix = parts[2] && parts[2].includes('_error') ? '_error' : '';
+  const extension = parts[3];
+  return path.join(outputPath, subFolder, `${parts[1]}${suffix}.${extension}`);
+};
+
+exports.sanitizeName = sanitizeName;
 
 exports.handler = (event, context, callback) => {
   let file_key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
@@ -31,8 +42,7 @@ exports.handler = (event, context, callback) => {
 
       source.subscribe(
         (zipEntry) => {
-          let archivePath = basePath.replace('backfill', path.join('low-priority-trace-sets', 'archive'));
-          let destinationPath = path.join(archivePath, zipEntry.name);
+          let destinationPath = sanitizeName(basePath, zipEntry.name);
           let params = {
             Bucket: bucket,
             Key: destinationPath,
