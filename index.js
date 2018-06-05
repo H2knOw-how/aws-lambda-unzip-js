@@ -48,15 +48,7 @@ exports.handler = (event, context, callback) => {
           callback(err, null);
         },
         () => {
-          let params = { Bucket: bucket, Key: file_key };
-          // Delete zip file
-          s3.deleteObject(params, (err, data) => {
-            if (err) {
-              callback(err, null);
-            } else {
-              callback(null, data);
-            }
-          });
+          callback(null, data);
         }
       );
     }
