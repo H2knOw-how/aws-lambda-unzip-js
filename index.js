@@ -44,7 +44,7 @@ exports.handler = (event, context, callback) => {
 
       source.subscribe(
         (zipEntry) => {
-          const extension = zipEntry.name.match(/(\..*)/);
+          const extension = zipEntry.name.match(/(\..*)/)[0];
           if (!allowedExtensions.includes(extension.toLowerCase())) {
             return;
           }
