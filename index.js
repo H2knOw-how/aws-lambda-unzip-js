@@ -52,7 +52,7 @@ exports.handler = (event, context, callback) => {
           let params = {
             Bucket: bucket,
             Key: destinationPath,
-            Body: zipEntry.getCompressedData() // decompressed file as buffer
+            Body: zipEntry.getData() // decompressed file as buffer
           };
           // upload decompressed file
           s3.putObject(params, (err, data) => {
