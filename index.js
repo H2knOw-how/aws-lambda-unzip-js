@@ -45,7 +45,7 @@ exports.handler = (event, context, callback) => {
       source.subscribe(
         (zipEntry) => {
           const extension = zipEntry.name.match(/(\..*)/);
-          if (!allowedExtensions.includes(extension)) {
+          if (!allowedExtensions.includes(extension.toLowerCase())) {
             return;
           }
           let destinationPath = sanitizeName(basePath, zipEntry.name);
