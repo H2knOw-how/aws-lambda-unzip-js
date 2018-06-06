@@ -6,6 +6,8 @@ const Rx = require('rx');
 const AdmZip = require('adm-zip');
 const path = require('path');
 
+const allowedExtensions = ['.tiff', '.tif', '.nc', '.netcdf', '.dsfu'];
+
 const sanitizeName = (basePath, entryName) => {
   const re = /[A-Za-z]+(\d+)(_\w+){0,1}\.(.*)/gi;
   const parts = re.exec(entryName);
@@ -42,6 +44,10 @@ exports.handler = (event, context, callback) => {
 
       source.subscribe(
         (zipEntry) => {
+          const extension = zipEntry.name.match(/(\..*)/);
+          if (!allowedExtensions.includes(extension)) {
+            return;
+          }
           let destinationPath = sanitizeName(basePath, zipEntry.name);
           let params = {
             Bucket: bucket,
